@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klaim Aqiqah Mobile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; color: #1f2937; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        input, select { 
+            width: 100%; 
+            padding: 8px 10px; 
+            border: 1px solid #d1d5db; 
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .btn-danger { background-color: #e11d48; color: white; padding: 14px; border-radius: 8px; font-weight: 600; width: 100%; }
+        .group-container { border: 2px solid #e5e7eb; border-radius: 12px; padding: 12px; background: white; margin-bottom: 16px; }
+        .item-row { border-bottom: 1px solid #f3f4f6; padding: 8px 0; position: relative; }
+        .item-row:last-child { border-bottom: none; }
+    </style>
+</head>
+<body class="pb-32">
+
+    <header class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center">
+        <h1 class="font-bold text-lg">Klaim Operasional</h1>
+        <div class="text-right">
+            <div id="headerTotal" class="text-xs font-bold bg-blue-700 px-2 py-1 rounded">Rp 0</div>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto p-4 space-y-4">
+        
+        <!-- Informasi Utama -->
+        <section class="card p-4 space-y-3">
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="text-[10px] uppercase font-bold text-gray-400">Cabang</label>
+                    <input type="text" id="cabang" value="Pasuruan">
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase font-bold text-gray-400">Tanggal</label>
+                    <input type="date" id="tanggal">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="text-[10px] uppercase font-bold text-gray-400">Nama Sohibul</label>
+                    <input type="text" id="sohibul" placeholder="Abd. Kholiq">
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase font-bold text-gray-400">Jam Kirim</label>
+                    <input type="time" id="jamKirim" value="15:00">
+                </div>
+            </div>
+            <div>
+                <label class="text-[10px] uppercase font-bold text-gray-400">Jenis Paket</label>
+                <input type="text" id="jenisPaket" placeholder="Paket Box Spesial 100 porsi">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="text-[10px] uppercase font-bold text-gray-400">Nominal Paket (Rp)</label>
+                    <input type="number" id="nominalPaket" placeholder="0" oninput="calculate()">
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase font-bold text-gray-400">Menu Utama</label>
+                    <input type="text" id="menu" placeholder="Krengsengan, Gule">
+                </div>
+            </div>
+            <div>
+                <label class="text-[10px] uppercase font-bold text-gray-400">Kondimen</label>
+                <input type="text" id="kondimen" placeholder="Acar, Pisang, dll">
+            </div>
+        </section>
+
+        <!-- Container Grup -->
+        <div id="groupsWrapper" class="space-y-4">
+            <!-- Grup akan ditambahkan di sini -->
+        </div>
+
+        <!-- Tombol Tambah Grup Baru -->
+        <button onclick="addGroup()" class="w-full py-3 border-2 border-dashed border-blue-400 text-blue-600 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+            TAMBAH GRUP MASAKAN
+        </button>
+
+        <!-- Summary Floating -->
+        <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-40 max-w-md mx-auto">
+            <div class="flex justify-between items-center mb-3">
+                <div>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase">Total Klaim</p>
+                    <p id="totalTxt" class="text-lg font-bold text-blue-600">Rp 0</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] text-gray-400 font-bold uppercase">Ratio</p>
+                    <p id="ratioTxt" class="text-lg font-bold text-orange-600">0%</p>
+                </div>
+            </div>
+            <button onclick="generatePDF()" class="btn-danger flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                </svg>
+                CETAK LAPORAN PDF
+            </button>
+        </div>
+    </main>
+
+    <script>
+        window.onload = () => {
+            document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+            addGroup("Krengsengan");
+        };
+
+        function addGroup(name = "") {
+            const groupId = Date.now();
+            const groupDiv = document.createElement('div');
+            groupDiv.className = "group-container shadow-sm";
+            groupDiv.id = `group-${groupId}`;
+            groupDiv.innerHTML = `
+                <div class="flex justify-between items-center mb-3 border-b pb-2">
+                    <input type="text" class="groupName font-bold text-blue-700 bg-transparent border-none p-0 focus:ring-0 uppercase w-3/4" placeholder="Nama Grup (Cth: ACAR)" value="${name}">
+                    <button onclick="removeGroup(${groupId})" class="text-red-400 p-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                    </button>
+                </div>
+                <div id="items-${groupId}" class="space-y-3 mb-4">
+                    <!-- Item rows here -->
+                </div>
+                <button onclick="addItem(${groupId})" class="w-full py-2 bg-green-50 text-green-600 rounded-lg text-xs font-bold border border-green-200 flex items-center justify-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                    TAMBAH ITEM KE GRUP INI
+                </button>
+            `;
+            document.getElementById('groupsWrapper').appendChild(groupDiv);
+            addItem(groupId); // Add first item automatically
+        }
+
+        function removeGroup(id) {
+            document.getElementById(`group-${id}`).remove();
+            calculate();
+        }
+
+        function addItem(groupId) {
+            const itemId = Date.now();
+            const itemDiv = document.createElement('div');
+            itemDiv.className = "item-row space-y-2";
+            itemDiv.id = `item-${itemId}`;
+            itemDiv.innerHTML = `
+                <div class="flex gap-2 items-start">
+                    <input type="text" placeholder="Nama Barang" class="itemName flex-1 font-medium">
+                    <button onclick="removeItem(${itemId})" class="text-gray-300 hover:text-red-500 font-bold">✕</button>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <input type="number" step="any" placeholder="Qty" class="itemQty" oninput="calculate()">
+                    <select class="itemUnit">
+                        <option>Kg</option><option>Liter</option><option>pak</option>
+                        <option>pc</option><option>box</option><option>trip</option>
+                        <option>orang</option><option>botol</option><option>paket</option>
+                    </select>
+                    <input type="number" placeholder="Harga" class="itemPrice" oninput="calculate()">
+                </div>
+                <label class="flex items-center gap-2 text-[10px] text-gray-500 font-medium">
+                    <input type="checkbox" class="itemStock h-3 w-3" onchange="toggleStock(${itemId}, this)"> Pakai Stok (Rp 0)
+                </label>
+            `;
+            document.getElementById(`items-${groupId}`).appendChild(itemDiv);
+        }
+
+        function removeItem(id) {
+            document.getElementById(`item-${id}`).remove();
+            calculate();
+        }
+
+        function toggleStock(id, cb) {
+            const row = document.getElementById(`item-${id}`);
+            const price = row.querySelector('.itemPrice');
+            if(cb.checked) { 
+                price.value = 0; 
+                price.disabled = true; 
+                price.classList.add('bg-gray-100');
+            } else { 
+                price.disabled = false; 
+                price.classList.remove('bg-gray-100');
+            }
+            calculate();
+        }
+
+        function calculate() {
+            let total = 0;
+            document.querySelectorAll('.item-row').forEach(row => {
+                const q = parseFloat(row.querySelector('.itemQty').value) || 0;
+                const p = parseFloat(row.querySelector('.itemPrice').value) || 0;
+                total += (q * p);
+            });
+            const nominal = parseFloat(document.getElementById('nominalPaket').value) || 0;
+            const ratio = nominal > 0 ? Math.round((total / nominal) * 100) : 0;
+            
+            const formattedTotal = "Rp " + total.toLocaleString('id-ID');
+            document.getElementById('totalTxt').innerText = formattedTotal;
+            document.getElementById('headerTotal').innerText = formattedTotal;
+            document.getElementById('ratioTxt').innerText = ratio + "%";
+        }
+
+        function generatePDF() {
+            const data = {
+                cabang: document.getElementById('cabang').value,
+                tanggal: new Date(document.getElementById('tanggal').value).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' }),
+                sohibul: document.getElementById('sohibul').value || '-',
+                paket: document.getElementById('jenisPaket').value || '-',
+                nominal: (parseFloat(document.getElementById('nominalPaket').value) || 0).toLocaleString('id-ID'),
+                jam: document.getElementById('jamKirim').value,
+                menu: document.getElementById('menu').value || '-',
+                kondimen: document.getElementById('kondimen').value || '-',
+                total: document.getElementById('totalTxt').innerText,
+                ratio: document.getElementById('ratioTxt').innerText
+            };
+
+            let tableHtml = '';
+            let count = 1;
+
+            document.querySelectorAll('.group-container').forEach(group => {
+                const groupName = group.querySelector('.groupName').value || 'LAIN-LAIN';
+                tableHtml += `<tr><td colspan="7" style="background:#f2f2f2; font-weight:bold; padding:5px; border:1px solid black; text-transform:uppercase;">${groupName}</td></tr>`;
+                
+                group.querySelectorAll('.item-row').forEach(row => {
+                    const name = row.querySelector('.itemName').value || '-';
+                    const qty = row.querySelector('.itemQty').value || 0;
+                    const unit = row.querySelector('.itemUnit').value;
+                    const price = parseFloat(row.querySelector('.itemPrice').value) || 0;
+                    const isStock = row.querySelector('.itemStock').checked;
+                    
+                    tableHtml += `
+                        <tr>
+                            <td style="border:1px solid black; text-align:center;">${count++}</td>
+                            <td style="border:1px solid black; padding-left:10px;">${name}</td>
+                            <td style="border:1px solid black; text-align:center;">${qty}</td>
+                            <td style="border:1px solid black; text-align:center;">${unit}</td>
+                            <td style="border:1px solid black; text-align:right; padding-right:5px;">${isStock ? '-' : 'Rp ' + price.toLocaleString('id-ID')}</td>
+                            <td style="border:1px solid black; text-align:right; padding-right:5px;">${isStock ? 'Rp 0' : 'Rp ' + (qty*price).toLocaleString('id-ID')}</td>
+                            <td style="border:1px solid black; font-size:9px;">${isStock ? 'menggunakan stok' : ''}</td>
+                        </tr>
+                    `;
+                });
+            });
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Klaim_${data.sohibul}</title>
+                    <style>
+                        body { font-family: 'Times New Roman', serif; padding: 15px; font-size: 11px; }
+                        .header { text-align: center; margin-bottom: 10px; }
+                        .info-table { width: 100%; margin-bottom: 15px; }
+                        .info-table td { padding: 2px; vertical-align: top; }
+                        .data-table { width: 100%; border-collapse: collapse; }
+                        .data-table th, .data-table td { border: 1px solid black; padding: 4px; }
+                        .footer { margin-top: 30px; display: flex; justify-content: space-between; }
+                        .sign-box { width: 200px; text-align: center; }
+                        @media print { @page { margin: 1cm; } }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h2 style="margin:0; text-decoration:underline;">LAPORAN KLAIM OPERASIONAL DAPUR</h2>
+                    </div>
+                    <table class="info-table">
+                        <tr>
+                            <td width="15%">Cabang</td><td width="35%">: ${data.cabang}</td>
+                            <td width="15%">Menu</td><td width="35%">: ${data.menu}</td>
+                        </tr>
+                        <tr>
+                            <td>Tanggal</td><td>: ${data.tanggal}</td>
+                            <td>Kondimen</td><td>: ${data.kondimen}</td>
+                        </tr>
+                        <tr>
+                            <td>Sohibul</td><td>: ${data.sohibul}</td>
+                            <td>Jam Kirim</td><td>: ${data.jam} WIB</td>
+                        </tr>
+                        <tr>
+                            <td>Paket</td><td>: ${data.paket}</td>
+                            <td>Nominal</td><td>: Rp ${data.nominal}</td>
+                        </tr>
+                    </table>
+                    <table class="data-table">
+                        <thead>
+                            <tr style="background:#eee">
+                                <th>No</th><th>Barang</th><th>Jumlah</th><th>Satuan</th><th>Harga Satuan</th><th>Total</th><th>Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>${tableHtml}</tbody>
+                        <tfoot style="font-weight:bold;">
+                            <tr><td colspan="5" style="text-align:right">TOTAL KLAIM</td><td style="text-align:right">${data.total}</td><td></td></tr>
+                            <tr><td colspan="5" style="text-align:right">RATIO</td><td style="text-align:right">${data.ratio}</td><td></td></tr>
+                        </tfoot>
+                    </table>
+                    <div class="footer">
+                        <div class="sign-box">Dibuat Oleh,<br><br><br><br>(........................)<br><b>Bagian Dapur</b></div>
+                        <div class="sign-box">Mengetahui,<br><br><br><br>(........................)<br><b>Admin Cabang</b></div>
+                    </div>
+                    <script>window.onload = () => { setTimeout(() => { window.print(); window.close(); }, 500); };<\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
+    </script>
+</body>
+</html>
