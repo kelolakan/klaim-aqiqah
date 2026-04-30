@@ -3,64 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Klaim Aqiqah Mobile - Revisi 2.0</title>
+    <title>Klaim Aqiqah Mobile - Integrasi Sheets</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #f3f4f6; 
-            color: #1f2937;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; color: #1f2937; -webkit-tap-highlight-color: transparent; }
         .card { background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        
-        input, select { 
-            width: 100%; 
-            padding: 12px; 
-            border: 1px solid #d1d5db; 
-            border-radius: 8px;
-            font-size: 14px;
-            appearance: none;
-        }
-
-        input:focus { outline: 2px solid #2563eb; border-color: transparent; }
-
+        input, select { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; appearance: none; }
         .btn-danger { background-color: #e11d48; color: white; padding: 14px; border-radius: 8px; font-weight: 700; width: 100%; }
-        
-        .group-container { 
-            border: 1px solid #e5e7eb; 
-            border-radius: 12px; 
-            padding: 16px; 
-            background: white; 
-            margin-bottom: 16px; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
+        .group-container { border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; background: white; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .item-row { border-bottom: 1px solid #f3f4f6; padding: 12px 0; }
         .item-row:last-child { border-bottom: none; }
-
-        /* Iframe Cetak Tersembunyi - Solusi Loading di HP */
-        #printFrame { 
-            position: absolute;
-            width: 0;
-            height: 0;
-            border: none;
-            visibility: hidden;
-        }
-
-        .spinner {
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top: 3px solid white;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            display: none;
-        }
-
+        #printFrame { position: absolute; width: 0; height: 0; border: none; visibility: hidden; }
+        .spinner { border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top: 3px solid white; width: 20px; height: 20px; animation: spin 1s linear infinite; display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
@@ -69,70 +24,39 @@
     <header class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center">
         <div>
             <h1 class="font-bold text-lg">Klaim Operasional</h1>
-            <p class="text-[10px] opacity-80">Revisi 2.0 - Mobile Optimized</p>
+            <p class="text-[10px] opacity-80">Revisi 2.1 - Spreadsheet Ready</p>
         </div>
-        <div id="headerTotal" class="text-sm font-bold bg-blue-700 px-3 py-1 rounded-full shadow-inner">Rp 0</div>
+        <div id="headerTotal" class="text-sm font-bold bg-blue-700 px-3 py-1 rounded-full">Rp 0</div>
     </header>
 
     <main class="max-w-md mx-auto p-4 space-y-4">
-        
         <section class="card p-4 space-y-4">
             <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="text-[10px] uppercase font-bold text-gray-400 mb-1 block">Cabang</label>
-                    <input type="text" id="cabang" value="Pasuruan">
-                </div>
-                <div>
-                    <label class="text-[10px] uppercase font-bold text-gray-400 mb-1 block">Tanggal</label>
-                    <input type="date" id="tanggal">
-                </div>
+                <div><label class="text-[10px] uppercase font-bold text-gray-400">Cabang</label><input type="text" id="cabang" value="Pasuruan"></div>
+                <div><label class="text-[10px] uppercase font-bold text-gray-400">Tanggal</label><input type="date" id="tanggal"></div>
             </div>
             <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="text-[10px] uppercase font-bold text-gray-400 mb-1 block">Sohibul</label>
-                    <input type="text" id="sohibul" placeholder="Nama">
-                </div>
-                <div>
-                    <label class="text-[10px] uppercase font-bold text-gray-400 mb-1 block">Jam Kirim</label>
-                    <input type="time" id="jamKirim" value="15:00">
-                </div>
+                <div><label class="text-[10px] uppercase font-bold text-gray-400">Sohibul</label><input type="text" id="sohibul" placeholder="Nama"></div>
+                <div><label class="text-[10px] uppercase font-bold text-gray-400">Jam Kirim</label><input type="time" id="jamKirim" value="15:00"></div>
             </div>
-            <div>
-                <label class="text-[10px] uppercase font-bold text-gray-400 mb-1 block">Menu Utama</label>
-                <input type="text" id="menu" placeholder="Contoh: Krengsengan, Gule">
-            </div>
+            <div><label class="text-[10px] uppercase font-bold text-gray-400">Menu Utama</label><input type="text" id="menu" placeholder="Contoh: Krengsengan, Gule"></div>
             <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="text-[10px] uppercase font-bold text-gray-400 mb-1 block">Nominal Paket (Rp)</label>
-                    <input type="number" id="nominalPaket" placeholder="0" oninput="calculate()">
-                </div>
-                <div>
-                    <label class="text-[10px] uppercase font-bold text-gray-400 mb-1 block">Kondimen</label>
-                    <input type="text" id="kondimen" placeholder="Acar, Pisang, dll">
-                </div>
+                <div><label class="text-[10px] uppercase font-bold text-bold text-gray-400">Nominal Paket (Rp)</label><input type="number" id="nominalPaket" oninput="calculate()"></div>
+                <div><label class="text-[10px] uppercase font-bold text-gray-400">Kondimen</label><input type="text" id="kondimen" placeholder="Acar, dll"></div>
             </div>
         </section>
 
         <div id="groupsWrapper" class="space-y-4"></div>
+        <button onclick="addGroup()" class="w-full py-4 border-2 border-dashed border-blue-400 text-blue-600 rounded-xl font-bold bg-blue-50">+ TAMBAH GRUP MASAKAN</button>
 
-        <button onclick="addGroup()" class="w-full py-4 border-2 border-dashed border-blue-400 text-blue-600 rounded-xl font-bold flex items-center justify-center gap-2 bg-blue-50">
-            + TAMBAH GRUP MASAKAN
-        </button>
-
-        <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-[0_-8px_20px_rgba(0,0,0,0.1)] z-40 max-w-md mx-auto">
+        <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-lg z-40 max-w-md mx-auto">
             <div class="flex justify-between items-end mb-4 px-1">
-                <div>
-                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Total Pengeluaran</p>
-                    <p id="totalTxt" class="text-xl font-black text-blue-600">Rp 0</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Ratio</p>
-                    <p id="ratioTxt" class="text-xl font-black text-orange-500">0%</p>
-                </div>
+                <div><p class="text-[10px] text-gray-400 font-bold uppercase">Total Klaim</p><p id="totalTxt" class="text-xl font-black text-blue-600">Rp 0</p></div>
+                <div class="text-right"><p class="text-[10px] text-gray-400 font-bold uppercase">Ratio</p><p id="ratioTxt" class="text-xl font-black text-orange-500">0%</p></div>
             </div>
             <button onclick="generatePDF()" id="printBtn" class="btn-danger flex items-center justify-center gap-3">
                 <div id="btnSpinner" class="spinner"></div>
-                <span id="btnText">CETAK LAPORAN SEKARANG</span>
+                <span id="btnText">CETAK & SIMPAN LAPORAN</span>
             </button>
         </div>
     </main>
@@ -140,6 +64,10 @@
     <iframe id="printFrame"></iframe>
 
     <script>
+        // --- KONFIGURASI SPREADSHEET ---
+        // Tempelkan URL Web App dari Google Apps Script di sini
+        const SCRIPT_URL = https://script.google.com/macros/s/AKfycby9ou-Ix2AZzrKMYAkKK53yn9G_mLmwne2OXey73ToRXONnx1-adrslH97NoHRoubrk/exec;
+
         window.onload = () => {
             document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
             addGroup("KRENGSENGAN");
@@ -147,86 +75,69 @@
 
         function addGroup(name = "") {
             const groupId = Date.now();
-            const groupDiv = document.createElement('div');
-            groupDiv.className = "group-container";
-            groupDiv.id = `group-${groupId}`;
-            groupDiv.innerHTML = `
-                <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-2">
-                    <input type="text" class="groupName font-bold text-blue-700 bg-transparent border-none uppercase text-base w-3/4" value="${name}" placeholder="NAMA GRUP">
+            const div = document.createElement('div');
+            div.className = "group-container"; div.id = `group-${groupId}`;
+            div.innerHTML = `
+                <div class="flex justify-between items-center mb-4 border-b pb-2">
+                    <input type="text" class="groupName font-bold text-blue-700 bg-transparent border-none uppercase text-base w-3/4" value="${name}">
                     <button onclick="removeGroup(${groupId})" class="text-gray-300">✕</button>
                 </div>
                 <div id="items-${groupId}" class="space-y-3"></div>
-                <div class="mt-4 pt-2 border-t border-gray-50">
-                    <button onclick="addItem(${groupId})" class="w-full py-2.5 bg-green-50 text-green-700 rounded-lg text-xs font-bold border border-green-200">+ BARANG</button>
-                </div>
+                <div class="mt-4 pt-2 border-t"><button onclick="addItem(${groupId})" class="w-full py-2 bg-green-50 text-green-700 rounded-lg text-xs font-bold">+ BARANG</button></div>
             `;
-            document.getElementById('groupsWrapper').appendChild(groupDiv);
-            addItem(groupId);
+            document.getElementById('groupsWrapper').appendChild(div); addItem(groupId);
         }
 
-        function removeGroup(id) {
-            document.getElementById(`group-${id}`).remove();
-            calculate();
-        }
+        function removeGroup(id) { document.getElementById(`group-${id}`).remove(); calculate(); }
 
         function addItem(groupId) {
             const itemId = Date.now();
-            const itemDiv = document.createElement('div');
-            itemDiv.className = "item-row space-y-3";
-            itemDiv.id = `item-${itemId}`;
-            itemDiv.innerHTML = `
-                <div class="flex gap-2 items-center">
-                    <input type="text" placeholder="Nama Barang" class="itemName flex-1 font-semibold text-gray-700">
-                    <button onclick="removeItem(${itemId})" class="text-gray-300">✕</button>
-                </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <input type="number" step="any" placeholder="Qty" class="itemQty" oninput="calculate()">
-                    <select class="itemUnit">
-                        <option>Kg</option><option>Liter</option><option>pak</option>
-                        <option>pc</option><option>box</option><option>botol</option><option>paket</option>
-                    </select>
-                    <input type="number" placeholder="Harga" class="itemPrice" oninput="calculate()">
-                </div>
-                <label class="flex items-center gap-2 text-[10px] text-gray-500 font-semibold bg-gray-50 p-2 rounded-md">
-                    <input type="checkbox" class="itemStock h-4 w-4" onchange="toggleStock(${itemId}, this)">
-                    MENGGUNAKAN STOK (RP 0)
-                </label>
+            const div = document.createElement('div');
+            div.className = "item-row space-y-3"; div.id = `item-${itemId}`;
+            div.innerHTML = `
+                <div class="flex gap-2 items-center"><input type="text" placeholder="Nama Barang" class="itemName flex-1 font-semibold text-gray-700"><button onclick="removeItem(${itemId})" class="text-gray-300">✕</button></div>
+                <div class="grid grid-cols-3 gap-2"><input type="number" step="any" placeholder="Qty" class="itemQty" oninput="calculate()"><select class="itemUnit"><option>Kg</option><option>Liter</option><option>pak</option><option>pc</option><option>paket</option></select><input type="number" placeholder="Harga" class="itemPrice" oninput="calculate()"></div>
+                <label class="flex items-center gap-2 text-[10px] text-gray-500 font-semibold bg-gray-50 p-2 rounded-md"><input type="checkbox" class="itemStock h-4 w-4" onchange="toggleStock(${itemId}, this)"> STOK (Rp 0)</label>
             `;
-            document.getElementById(`items-${groupId}`).appendChild(itemDiv);
+            document.getElementById(`items-${groupId}`).appendChild(div);
         }
 
-        function removeItem(id) {
-            document.getElementById(`item-${id}`).remove();
-            calculate();
-        }
+        function removeItem(id) { document.getElementById(`item-${id}`).remove(); calculate(); }
 
         function toggleStock(id, cb) {
             const row = document.getElementById(`item-${id}`);
             const priceInput = row.querySelector('.itemPrice');
-            if(cb.checked) {
-                priceInput.value = 0;
-                priceInput.disabled = true;
-                priceInput.classList.add('bg-gray-100');
-            } else {
-                priceInput.disabled = false;
-                priceInput.classList.remove('bg-gray-100');
-            }
+            priceInput.value = cb.checked ? 0 : ""; priceInput.disabled = cb.checked;
             calculate();
         }
 
         function calculate() {
             let total = 0;
             document.querySelectorAll('.item-row').forEach(row => {
-                const qty = parseFloat(row.querySelector('.itemQty').value) || 0;
-                const price = parseFloat(row.querySelector('.itemPrice').value) || 0;
-                total += (qty * price);
+                const q = parseFloat(row.querySelector('.itemQty').value) || 0;
+                const p = parseFloat(row.querySelector('.itemPrice').value) || 0;
+                total += (q * p);
             });
-            const nominal = parseFloat(document.getElementById('nominalPaket').value) || 0;
-            const ratio = nominal > 0 ? Math.round((total / nominal) * 100) : 0;
+            const nom = parseFloat(document.getElementById('nominalPaket').value) || 0;
+            const rat = nom > 0 ? Math.round((total / nom) * 100) : 0;
             const ft = "Rp " + total.toLocaleString('id-ID');
             document.getElementById('totalTxt').innerText = ft;
             document.getElementById('headerTotal').innerText = ft;
-            document.getElementById('ratioTxt').innerText = ratio + "%";
+            document.getElementById('ratioTxt').innerText = rat + "%";
+        }
+
+        // FUNGSI KIRIM DATA KE GOOGLE SHEETS
+        async function sendToSpreadsheet(data) {
+            if (SCRIPT_URL === "ISI_DENGAN_URL_DEPLOYMENT_GAS_ANDA") return;
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Penting untuk Apps Script
+                    cache: 'no-cache',
+                    body: JSON.stringify(data)
+                });
+                console.log("Data terkirim ke Sheets");
+            } catch (e) { console.error("Gagal kirim ke Sheets", e); }
         }
 
         function generatePDF() {
@@ -234,42 +145,32 @@
             const btnText = document.getElementById('btnText');
             const spinner = document.getElementById('btnSpinner');
 
-            btnText.innerText = "MENYIAPKAN PDF...";
-            spinner.style.display = "block";
-            btn.disabled = true;
+            btnText.innerText = "MENYIMPAN DATA...";
+            spinner.style.display = "block"; btn.disabled = true;
 
             const d = {
+                tanggal: document.getElementById('tanggal').value,
                 cabang: document.getElementById('cabang').value,
-                tgl: new Date(document.getElementById('tanggal').value).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' }),
                 sohibul: document.getElementById('sohibul').value || '-',
-                nominal: (parseFloat(document.getElementById('nominalPaket').value) || 0).toLocaleString('id-ID'),
-                jam: document.getElementById('jamKirim').value,
                 menu: document.getElementById('menu').value || '-',
-                kondimen: document.getElementById('kondimen').value || '-',
+                nominal: parseFloat(document.getElementById('nominalPaket').value) || 0,
                 total: document.getElementById('totalTxt').innerText,
                 ratio: document.getElementById('ratioTxt').innerText
             };
 
-            let tableHtml = '';
-            let counter = 1;
+            // Jalankan simpan data secara background
+            sendToSpreadsheet(d);
 
+            // Proses Tabel PDF tetap sama
+            let tableRows = ''; let counter = 1;
             document.querySelectorAll('.group-container').forEach(group => {
                 const gName = group.querySelector('.groupName').value || 'LAIN-LAIN';
-                tableHtml += `<tr><td colspan="7" style="background:#f0f0f0; font-weight:bold; padding:8px; border:1px solid black;">${gName.toUpperCase()}</td></tr>`;
+                tableRows += `<tr><td colspan="7" style="background:#f0f0f0; font-weight:bold; padding:8px; border:1px solid black;">${gName.toUpperCase()}</td></tr>`;
                 group.querySelectorAll('.item-row').forEach(row => {
                     const isStock = row.querySelector('.itemStock').checked;
-                    const qty = row.querySelector('.itemQty').value || 0;
-                    const price = parseFloat(row.querySelector('.itemPrice').value) || 0;
-                    tableHtml += `
-                        <tr>
-                            <td style="border:1px solid black; text-align:center;">${counter++}</td>
-                            <td style="border:1px solid black; padding:4px;">${row.querySelector('.itemName').value}</td>
-                            <td style="border:1px solid black; text-align:center;">${qty}</td>
-                            <td style="border:1px solid black; text-align:center;">${row.querySelector('.itemUnit').value}</td>
-                            <td style="border:1px solid black; text-align:right;">${isStock ? '-' : 'Rp '+price.toLocaleString('id-ID')}</td>
-                            <td style="border:1px solid black; text-align:right;">${isStock ? 'Rp 0' : 'Rp '+(qty*price).toLocaleString('id-ID')}</td>
-                            <td style="border:1px solid black; font-size:9px; text-align:center;">${isStock ? 'stok' : ''}</td>
-                        </tr>`;
+                    const q = row.querySelector('.itemQty').value || 0;
+                    const p = parseFloat(row.querySelector('.itemPrice').value) || 0;
+                    tableRows += `<tr><td style="border:1px solid black;text-align:center">${counter++}</td><td style="border:1px solid black;padding:4px">${row.querySelector('.itemName').value}</td><td style="border:1px solid black;text-align:center">${q}</td><td style="border:1px solid black;text-align:center">${row.querySelector('.itemUnit').value}</td><td style="border:1px solid black;text-align:right">${isStock ? '-' : 'Rp '+p.toLocaleString('id-ID')}</td><td style="border:1px solid black;text-align:right">${isStock ? 'Rp 0' : 'Rp '+(q*p).toLocaleString('id-ID')}</td><td style="border:1px solid black;text-align:center">${isStock ? 'stok' : ''}</td></tr>`;
                 });
             });
 
@@ -277,15 +178,11 @@
                 <body><h2 style="text-align:center;text-decoration:underline">LAPORAN KLAIM OPERASIONAL DAPUR</h2>
                 <table class="info">
                     <tr><td width="15%">Cabang</td><td width="35%">: ${d.cabang}</td><td width="15%">Menu</td><td>: ${d.menu}</td></tr>
-                    <tr><td>Tanggal</td><td>: ${d.tgl}</td><td>Jam</td><td>: ${d.jam} WIB</td></tr>
-                    <tr><td>Sohibul</td><td>: ${d.sohibul}</td><td>Nominal</td><td>: Rp ${d.nominal}</td></tr>
+                    <tr><td>Tanggal</td><td>: ${d.tanggal}</td><td>Nominal</td><td>: Rp ${d.nominal.toLocaleString('id-ID')}</td></tr>
+                    <tr><td>Sohibul</td><td>: ${d.sohibul}</td><td>Total Klaim</td><td>: ${d.total}</td></tr>
                 </table>
-                <table><thead><tr style="background:#eee"><th>No</th><th>Barang</th><th>Qty</th><th>Sat</th><th>Harga</th><th>Total</th><th>Ket</th></tr></thead>
-                <tbody>${tableHtml}</tbody>
-                <tfoot style="font-weight:bold"><tr><td colspan="5" style="text-align:right">TOTAL</td><td style="text-align:right">${d.total}</td><td></td></tr>
-                <tr><td colspan="5" style="text-align:right">RATIO</td><td style="text-align:right">${d.ratio}</td><td></td></tr></tfoot></table>
-                <div style="margin-top:40px;display:flex;justify-content:space-between;text-align:center"><div>Dibuat,<br><br><br>(........)<br><b>Dapur</b></div><div>Mengetahui,<br><br><br>(........)<br><b>Admin</b></div></div>
-                </body></html>`;
+                <table><thead><tr style="background:#eee"><th>No</th><th>Barang</th><th>Qty</th><th>Sat</th><th>Harga</th><th>Total</th><th>Ket</th></tr></thead><tbody>${tableRows}</tbody>
+                <tfoot style="font-weight:bold"><tr><td colspan="5" style="text-align:right">TOTAL</td><td style="text-align:right">${d.total}</td><td></td></tr><tr><td colspan="5" style="text-align:right">RATIO</td><td style="text-align:right">${d.ratio}</td><td></td></tr></tfoot></table></body></html>`;
 
             const frame = document.getElementById('printFrame');
             const fDoc = frame.contentWindow.document;
@@ -294,9 +191,8 @@
             setTimeout(() => {
                 frame.contentWindow.focus();
                 frame.contentWindow.print();
-                btnText.innerText = "CETAK LAPORAN SEKARANG";
-                spinner.style.display = "none";
-                btn.disabled = false;
+                btnText.innerText = "CETAK & SIMPAN LAPORAN";
+                spinner.style.display = "none"; btn.disabled = false;
             }, 1000);
         }
     </script>
