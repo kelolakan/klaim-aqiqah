@@ -41,13 +41,13 @@
             </div>
             <div><label class="text-[10px] uppercase font-bold text-gray-400">Menu Utama</label><input type="text" id="menu" placeholder="Contoh: Krengsengan, Gule"></div>
             <div class="grid grid-cols-2 gap-3">
-                <div><label class="text-[10px] uppercase font-bold text-bold text-gray-400">Nominal Paket (Rp)</label><input type="number" id="nominalPaket" oninput="calculate()"></div>
+                <div><label class="text-[10px] uppercase font-bold text-gray-400">Nominal Paket (Rp)</label><input type="number" id="nominalPaket" oninput="calculate()"></div>
                 <div><label class="text-[10px] uppercase font-bold text-gray-400">Kondimen</label><input type="text" id="kondimen" placeholder="Acar, dll"></div>
             </div>
         </section>
 
         <div id="groupsWrapper" class="space-y-4"></div>
-        <button onclick="addGroup()" class="w-full py-4 border-2 border-dashed border-blue-400 text-blue-600 rounded-xl font-bold bg-blue-50">+ TAMBAH GRUP MASAKAN</button>
+        <button onclick="addGroup()" class="w-full py-4 border-2 border-dashed border-blue-400 text-blue-600 rounded-xl font-bold bg-blue-50">+ TAMBAH GRUP BARU</button>
 
         <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-lg z-40 max-w-md mx-auto">
             <div class="flex justify-between items-end mb-4 px-1">
@@ -64,9 +64,8 @@
     <iframe id="printFrame"></iframe>
 
     <script>
-        // --- KONFIGURASI SPREADSHEET ---
-        // Tempelkan URL Web App dari Google Apps Script di sini
-        const SCRIPT_URL = https://script.google.com/macros/s/AKfycby9ou-Ix2AZzrKMYAkKK53yn9G_mLmwne2OXey73ToRXONnx1-adrslH97NoHRoubrk/exec;
+        // --- MASUKKAN URL WEB APP ANDA DI SINI ---
+        const SCRIPT_URL = "MASUKKAN_URL_WEB_APP_GAS_DI_SINI";
 
         window.onload = () => {
             document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
@@ -126,27 +125,15 @@
             document.getElementById('ratioTxt').innerText = rat + "%";
         }
 
-        // FUNGSI KIRIM DATA KE GOOGLE SHEETS
-        async function sendToSpreadsheet(data) {
-            if (SCRIPT_URL === "ISI_DENGAN_URL_DEPLOYMENT_GAS_ANDA") return;
-            try {
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors', // Penting untuk Apps Script
-                    cache: 'no-cache',
-                    body: JSON.stringify(data)
-                });
-                console.log("Data terkirim ke Sheets");
-            } catch (e) { console.error("Gagal kirim ke Sheets", e); }
-        }
-
-        function generatePDF() {
+        async function generatePDF() {
             const btn = document.getElementById('printBtn');
             const btnText = document.getElementById('btnText');
             const spinner = document.getElementById('btnSpinner');
 
+            // Feedback Visual
             btnText.innerText = "MENYIMPAN DATA...";
-            spinner.style.display = "block"; btn.disabled = true;
+            spinner.style.display = "block"; 
+            btn.disabled = true;
 
             const d = {
                 tanggal: document.getElementById('tanggal').value,
@@ -158,11 +145,24 @@
                 ratio: document.getElementById('ratioTxt').innerText
             };
 
-            // Jalankan simpan data secara background
-            sendToSpreadsheet(d);
+            // --- PROSES KIRIM KE GOOGLE SHEETS (DENGAN NO-CORS) ---
+            if (SCRIPT_URL !== "MASUKKAN_URL_WEB_APP_GAS_DI_SINI") {
+                try {
+                    await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors', // Menghindari pemblokiran lintas domain
+                        cache: 'no-cache',
+                        body: JSON.stringify(d)
+                    });
+                    console.log("Data dikirim ke Spreadsheet");
+                } catch (e) {
+                    console.error("Gagal mengirim ke Spreadsheet:", e);
+                }
+            }
 
-            // Proses Tabel PDF tetap sama
-            let tableRows = ''; let counter = 1;
+            // --- PROSES CETAK PDF ---
+            let tableRows = ''; 
+            let counter = 1;
             document.querySelectorAll('.group-container').forEach(group => {
                 const gName = group.querySelector('.groupName').value || 'LAIN-LAIN';
                 tableRows += `<tr><td colspan="7" style="background:#f0f0f0; font-weight:bold; padding:8px; border:1px solid black;">${gName.toUpperCase()}</td></tr>`;
@@ -191,8 +191,11 @@
             setTimeout(() => {
                 frame.contentWindow.focus();
                 frame.contentWindow.print();
+                
+                // Reset Tombol
                 btnText.innerText = "CETAK & SIMPAN LAPORAN";
-                spinner.style.display = "none"; btn.disabled = false;
+                spinner.style.display = "none"; 
+                btn.disabled = false;
             }, 1000);
         }
     </script>
